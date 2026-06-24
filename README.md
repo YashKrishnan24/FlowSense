@@ -2,7 +2,7 @@
 
 FlowSense is a production-grade SaaS platform that helps designers, developers, founders, and product teams identify usability issues, accessibility violations, visual hierarchy problems, and conversion bottlenecks using AI.
 
-## 🏗️ Architecture
+##  Architecture
 
 FlowSense uses a decoupled architecture for maximum scalability and type-safety.
 
@@ -40,7 +40,7 @@ graph TD
     UI -->|Download| PDF
 ```
 
-## 🔐 Environment Variables
+##  Environment Variables
 
 To run the application locally or in production, you must configure the following environment variables.
 
@@ -64,7 +64,7 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="your_unsigned_preset"
 GEMINI_API_KEY="AIzaSy..."
 ```
 
-## 🛠️ PostgreSQL Migration Instructions
+##  PostgreSQL Migration Instructions
 
 While SQLite was used for rapid local prototyping, the production schema is strictly PostgreSQL.
 
@@ -77,7 +77,7 @@ While SQLite was used for rapid local prototyping, the production schema is stri
    ```
 *(Note: If you wish to use SQLite locally, temporarily change `provider = "postgresql"` to `provider = "sqlite"` in `schema.prisma`, and update `url: process.env["DATABASE_URL"]` to `url: "file:./dev.db"` in `prisma.config.ts`.)*
 
-## 🚀 Deployment Plan
+##  Deployment Plan
 
 ### 1. Database (Neon or Supabase)
 - Create a new project and retrieve the connection string. Ensure connection pooling (PgBouncer) is disabled for `prisma db push` or append `?pgbouncer=true` if required by your Prisma Client configuration.
