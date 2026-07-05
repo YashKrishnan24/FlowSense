@@ -1,10 +1,44 @@
-# FlowSense - AI-Powered UX Intelligence Platform
+<div align="center">
+  <h1> FlowSense</h1>
+  <p><strong>AI-Powered UX Intelligence Platform</strong></p>
+  <p>Elevate your digital products with automated usability, accessibility, and conversion diagnostics.</p>
+</div>
 
-FlowSense is a production-grade SaaS platform that helps designers, developers, founders, and product teams identify usability issues, accessibility violations, visual hierarchy problems, and conversion bottlenecks using AI.
+<br />
 
-##  Architecture
+## Overview
 
-FlowSense uses a decoupled architecture for maximum scalability and type-safety.
+**FlowSense** is a production-grade SaaS platform designed to act as an AI co-pilot for your UX/UI design process. It empowers designers, developers, founders, and product teams to instantly identify usability issues, accessibility violations, visual hierarchy problems, and conversion bottlenecks by simply analyzing UI screenshots.
+
+##  Key Features
+
+-  **AI-Powered Diagnostics:** Leverages Google Gemini 2.5 Flash to deeply analyze your interface and provide actionable UX insights.
+-  **Accessibility & Usability Audits:** Automatically detects potential WCAG violations and structural design flaws.
+-  **Exportable PDF Reports:** Generate and download beautiful, structured UX audit reports in a single click.
+-  **Secure & Private:** Enterprise-grade security with Clerk authentication and PostgreSQL-backed isolated workspaces.
+-  **Lightning Fast:** Built on a modern decoupled architecture using Next.js 15 and FastAPI for maximum performance.
+
+##  Tech Stack
+
+### Frontend
+- **Framework:** Next.js 15 (App Router)
+- **Styling & UI:** Tailwind CSS, shadcn/ui, Framer Motion
+- **State Management:** Zustand
+- **Authentication:** Clerk Auth
+- **Asset Storage:** Cloudinary
+
+### Backend & AI
+- **Microservice Engine:** FastAPI (Python)
+- **AI Model:** Google Gemini 2.5 Flash
+- **Data Validation:** Pydantic
+
+### Database & ORM
+- **Database:** PostgreSQL (Neon / Supabase)
+- **ORM:** Prisma
+
+##  System Architecture
+
+Our decoupled architecture ensures maximum scalability, separation of concerns, and end-to-end type safety.
 
 ```mermaid
 graph TD
@@ -12,39 +46,57 @@ graph TD
     subgraph "Frontend (Next.js 15 on Vercel)"
         UI[React App Router]
         Store[Zustand State]
-        PDF[PDF Export]
+        PDF[PDF Export Module]
         NextAPI[Next.js API Routes]
     end
 
     %% External Services
     Auth[Clerk Auth]
     CDN[Cloudinary]
-    DB[(PostgreSQL - Neon/Supabase)]
+    DB[(PostgreSQL)]
 
     %% Backend Layer
     subgraph "AI Microservice (FastAPI on Railway)"
         FastAPI[FastAPI Router]
         Gemini[Google Gemini 2.5 Flash]
-        Pydantic[Pydantic JSON Validation]
+        Pydantic[Pydantic Validation]
     end
 
     %% Flow
-    User([User]) -->|Upload Image| UI
+    User([User]) -->|Upload Screenshot| UI
     UI <--> Auth
     UI -->|Unsigned Upload| CDN
     UI -->|POST Image URL| FastAPI
-    FastAPI <-->|Analyze| Gemini
-    FastAPI -->|Return UXReport JSON| UI
-    UI -->|POST JSON| NextAPI
+    FastAPI <-->|Analyze Image| Gemini
+    FastAPI -->|Return UX Report JSON| UI
+    UI -->|Save Report via Next API| NextAPI
     NextAPI -->|Prisma ORM| DB
-    UI -->|Download| PDF
+    UI -->|Download Report| PDF
 ```
 
-##  Environment Variables
+##  Getting Started
 
-To run the application locally or in production, you must configure the following environment variables.
+Follow these instructions to set up the project locally.
 
-### Frontend (`frontend/.env.local`)
+### Prerequisites
+- Node.js 18.x or later
+- Python 3.9 or later
+- PostgreSQL database (local or cloud-based like Neon/Supabase)
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/YashKrishnan24/FlowSense.git
+cd FlowSense
+```
+
+### 2. Frontend Setup
+Navigate to the `frontend` directory and install dependencies:
+```bash
+cd frontend
+npm install
+```
+
+Set up your `.env.local` file:
 ```env
 # Database
 DATABASE_URL="postgresql://user:password@hostname:5432/flowsense"
@@ -58,41 +110,40 @@ NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your_cloud_name"
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="your_unsigned_preset"
 ```
 
-### Backend (`backend/.env`)
-```env
-# Google AI Studio
-GEMINI_API_KEY="AIzaSy..."
+Apply database migrations:
+```bash
+npx prisma generate
+npx prisma db push
+```
+*(Note: If using SQLite locally instead of PostgreSQL, temporarily change `provider = "postgresql"` to `provider = "sqlite"` in `schema.prisma`, and update the `url` config.)*
+
+Start the frontend development server:
+```bash
+npm run dev
 ```
 
-##  PostgreSQL Migration Instructions
+### 3. Backend Setup
+Navigate to the `backend` directory and set up the Python environment:
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-While SQLite was used for rapid local prototyping, the production schema is strictly PostgreSQL.
+Set up your `.env` file:
+```env
+GEMINI_API_KEY="your_google_gemini_api_key"
+```
 
-1. Create a free Postgres database on **Supabase** or **Neon**.
-2. Copy the connection string to your `DATABASE_URL` in `frontend/.env.local`.
-3. In the `frontend` directory, apply the schema:
-   ```bash
-   npx prisma generate
-   npx prisma db push
-   ```
-*(Note: If you wish to use SQLite locally, temporarily change `provider = "postgresql"` to `provider = "sqlite"` in `schema.prisma`, and update `url: process.env["DATABASE_URL"]` to `url: "file:./dev.db"` in `prisma.config.ts`.)*
+Start the FastAPI server:
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
 
-##  Deployment Plan
+##  Deployment
 
-### 1. Database (Neon or Supabase)
-- Create a new project and retrieve the connection string. Ensure connection pooling (PgBouncer) is disabled for `prisma db push` or append `?pgbouncer=true` if required by your Prisma Client configuration.
-
-### 2. AI Microservice (Railway or Render)
-- Connect your GitHub repository to Railway.
-- Create a new service pointing to the `backend/` directory.
-- Add `GEMINI_API_KEY` to the environment variables.
-- Railway will automatically detect the `requirements.txt` and `main.py` (ensure you set the start command to `uvicorn main:app --host 0.0.0.0 --port $PORT`).
-
-### 3. Frontend (Vercel)
-- Connect your GitHub repository to Vercel.
-- Point the Root Directory to `frontend/`.
-- Add all frontend environment variables (Clerk, Cloudinary, Database URL).
-- Deploy. Vercel will automatically detect Next.js and build the project.
-
----
-*Version 1 Finalized - Designed for enterprise-grade UX analysis.*
+FlowSense is designed for easy deployment across modern cloud providers:
+- **Frontend:** Vercel (Auto-detects Next.js)
+- **Backend Microservice:** Railway or Render (Add `GEMINI_API_KEY` to environment variables)
+- **Database:** Neon or Supabase (Ensure connection pooling is disabled for `prisma db push`, or append `?pgbouncer=true` if required by your setup)
