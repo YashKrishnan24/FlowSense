@@ -131,7 +131,7 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Set up your `.env` file:
+Set up your `.env` :
 ```env
 GEMINI_API_KEY="your_google_gemini_api_key"
 ```
