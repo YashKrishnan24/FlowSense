@@ -6,11 +6,11 @@
 
 <br />
 
-## Overview
+## Overview:
 
 **FlowSense** is a production-grade SaaS platform designed to act as an AI co-pilot for your UX/UI design process. It empowers designers, developers, founders, and product teams to instantly identify usability issues, accessibility violations, visual hierarchy problems, and conversion bottlenecks by simply analyzing UI screenshots.
 
-##  Key Features
+##  Key Features:
 
 -  **AI-Powered Diagnostics:** Leverages Google Gemini 2.5 Flash to deeply analyze your interface and provide actionable UX insights.
 -  **Accessibility & Usability Audits:** Automatically detects potential WCAG violations and structural design flaws.
@@ -18,7 +18,7 @@
 -  **Secure & Private:** Enterprise-grade security with Clerk authentication and PostgreSQL-backed isolated workspaces.
 -  **Lightning Fast:** Built on a modern decoupled architecture using Next.js 15 and FastAPI for maximum performance.
 
-##  Tech Stack
+##  Tech Stack:
 
 ### Frontend
 - **Framework:** Next.js 15 (App Router)
@@ -27,12 +27,12 @@
 - **Authentication:** Clerk Auth
 - **Asset Storage:** Cloudinary
 
-### Backend & AI
+### Backend & AI:
 - **Microservice Engine:** FastAPI (Python)
 - **AI Model:** Google Gemini 2.5 Flash
 - **Data Validation:** Pydantic
 
-### Database & ORM
+### Database & ORM:
 - **Database:** PostgreSQL (Neon / Supabase)
 - **ORM:** Prisma
 
